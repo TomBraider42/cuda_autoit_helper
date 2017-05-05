@@ -1,0 +1,10 @@
+[info]
+title=PHP AutoIt Helper
+desc=PHP AutoIt Helper
+type=cudatext-plugin
+subdir=cuda_autoit_helper
+
+[item1]
+section=events
+events=on_func_hint
+lexers=AutoIt
