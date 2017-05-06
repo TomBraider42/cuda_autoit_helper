@@ -1,10 +1,11 @@
 [info]
-title=PHP AutoIt Helper
-desc=PHP AutoIt Helper
+title=AutoIt Helper
+desc=Autocompletion and function hints for AutoIt Lexer
 type=cudatext-plugin
 subdir=cuda_autoit_helper
+homepage=https://github.com/TomBraider42/cuda_autoit_helper
 
 [item1]
 section=events
-events=on_func_hint
+events=on_func_hint,on_complete
 lexers=AutoIt
