@@ -3,12 +3,14 @@ import cudatext as ct
 import cudatext_cmd
 import os
 import codecs
+import re
 
 
 class Command:
 
     def __init__(self):
     
+        self.vars = []
         self.functions = []
         acpfile = os.path.join(os.path.dirname(__file__), 'AutoIt.acp')
 
@@ -30,6 +32,47 @@ class Command:
                     
                     self.functions.append([s1, s2, s3])
         
+
+    def on_change_slow(self, ed):
+    
+        if ed.get_prop(PROP_LEXER_CARET) == 'AutoIt':
+            self.parse_text(ed)
+
+
+    def parse_text(self, ed):
+    
+        file = ed.get_filename()
+        text = ed.get_text_all()
+        text = re.split('\r|\n',text)
+        self.find_keywords(text)
+
+
+    def find_keywords(self, text):   
+        
+        self.vars = []
+        regvars = re.compile(r'\$(\w*)(?:\s|\[)', re.I)
+        iscomment = False
+            
+        for line in text:
+            ls = line.strip()
+            
+            if ls.find(';') == 0:
+                continue
+            if ls.find('#cs') == 0 or ls.find('#comments-start') == 0:
+                iscomment = True
+            if ls.find('#ce') >= 0 or ls.find('#comments-end') >= 0:
+                iscomment = False
+            if iscomment == True:
+                continue
+                    
+            line = ' ' + line
+            foundvars = regvars.findall(line)
+            for fvar in foundvars:
+                fvar = '$' + fvar.strip(' ,()[]')
+                if fvar != '$':
+                    if fvar not in self.vars:
+                        self.vars.append(fvar)
+
 
     def on_func_hint(self, ed_self):
     
@@ -93,7 +136,10 @@ class Command:
     
         line = ed.get_text_line(row).lower()
         search = line[:col]
-        start = search.replace('>', ' ').rfind(' ') + 1
+        for s in ',([&\t':
+            if s in search:
+                search = search.replace(s, ' ')
+        start = search.rfind(' ') + 1
         search = search[start:]
         text = ''
         
@@ -103,6 +149,11 @@ class Command:
                 if f[2]:
                     pars = '(' + f[2] + ')'
                 text += f[0] + '|' + f[1] + '|' + pars + '\n'
+                
+        for f in self.vars:
+            if f.lower().find(search) == 0:
+                text += 'var|' + f.strip('$') + '|\n'
+                    
         return text
 
 
@@ -130,7 +181,7 @@ class Command:
             
         return (text, fn, y0, x0)
         
-    
+        
 def is_wordchar(s):
-    return (s=='_') or s.isalnum()
+    return s.isalnum() or '#' in s or '@' in s or '<' in s or '_' in s
 
