@@ -355,6 +355,7 @@ Include <WindowsConstants.au3>
 Include <WinNet.au3>
 Include <Word.au3>
 Include <WordConstants.au3>
+Include <Resources.au3>
 
 Function Abs(expression) |Calculates the absolute value of a number
 Function ACos(expression) |Calculates the arcCosine of a number
@@ -3852,3 +3853,19 @@ Function _Word_DocSaveAs(Requires: #include <Word.au3>) |Saves the specified Wor
 Function _Word_DocTableRead(Requires: #include <Word.au3>) |Reads a Word table and returns the content as a two-dimensional array , $oDoc, $vTable [, $iIndexBase = Default [, $sDelimiter = Default]])
 Function _Word_DocTableWrite(Requires: #include <Word.au3>) |Writes a one or two dimensional array to a Word table , $oRange, ByRef $aArray [, $iIndexBase = Default [, $sDelimiter = Default]])
 Function _Word_Quit(Requires: #include <Word.au3>) |Closes all documents, the Word application and removes the object reference to it 
+
+Function _ResourceGet($ResName [, $ResType [, $ResLang [, $DLL]]]) |Get data from resource (as pointer) (Requires: #Include <Resources.au3>)
+Function _ResourceGetAsBitmap($ResName [, $ResType [, $DLL]]) |Get picture from resource as hBitmap type (Requires: #Include <Resources.au3>)
+Function _ResourceGetAsBytes($ResName [, $ResType [, $ResLang [, $DLL]]]) |Get data from resource as bytes (Requires: #Include <Resources.au3>)
+Function _ResourceGetAsImage($ResName [, $ResType [, $DLL]]) |Get picture from resource as hImage type (Requires: #Include <Resources.au3>)
+Function _ResourceGetAsString($ResName [, $ResType [, $ResLang [, $DLL]]]) |Get string from resource (Requires: #Include <Resources.au3>) 
+Function _ResourceGetAsStringW($ResName [, $ResType [, $ResLang [, $DLL]]]) |Get sfrom resource (Unicode) (Requires: #Include <Resources.au3>)
+Function _ResourcePlaySound($ResName [, $Flag [, $DLL]]) |Play sound from resource (only WAV) (Requires: #Include <Resources.au3>)
+Function _ResourceSaveToFile($FileName, $ResName [, $ResType [, $ResLang [, $CreatePath [, $DLL]]]]) |Save resource to file (Requires: #Include <Resources.au3>)
+Function _ResourceSetImageToCtrl($CtrlId, $ResName [, $ResType [, $DLL]]) |Set image from resource to control (Requires: #Include <Resources.au3>)
+Function _SetBitmapToCtrl($CtrlId, $hBitmap) |Set bitmap to control (Requires: #Include <Resources.au3>)
+
+# FW 
+Function zeig( $var, $var, $var, ...) |shows multiple commaseperated variables in MsgBox (Requires: #Include <FW.au3>)
+Function print( $var, $var, $var, ...) |shows multiple commaseperated variables in Console (Requires: #Include <FW.au3>)
+Function _Komma2Punkt( $guiCtrl ) |replaces , to . in GUICtrl (GUICtrlRead/GUICtrlSetData) (Requires: #Include <FW.au3>)

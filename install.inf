@@ -7,5 +7,11 @@ homepage=https://github.com/TomBraider42/cuda_autoit_helper
 
 [item1]
 section=events
-events=on_func_hint,on_complete,on_change_slow
+events=on_open,on_change_slow,on_save,on_func_hint,on_complete,on_goto_def
 lexers=AutoIt
+
+[item2]
+section=commands
+caption=AutoIt Helper\Config...
+method=show_config
+menu=o
