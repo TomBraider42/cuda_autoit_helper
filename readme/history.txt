@@ -1,6 +1,10 @@
 
+2018.01.29
++ added "Go to definition" command handling
++ added parsing of include-files
+
 2017.08.29
-added used variables to auto-completion 
++ added used variables to auto-completion 
 
 2017.05.05
 initial version
