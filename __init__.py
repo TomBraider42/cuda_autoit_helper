@@ -22,8 +22,11 @@ class Command:
     times = []
     defs = []
 
-    def __init__(self):
 
+    def __init__(self):
+        '''
+        load and parse acp file
+        '''
         acpfile = os.path.join(os.path.dirname(__file__), 'AutoIt.acp')
 
         if os.path.isfile(self.options_filename):
@@ -52,31 +55,30 @@ class Command:
 
 
     def on_open(self, ed_self):
-
-        if ed_self.get_prop(PROP_LEXER_CARET) == 'AutoIt':
-#           print(time.strftime('[%H:%M:%S]'), 'open start')
-            self.parse_text(ed_self, 1)
-#           print(time.strftime('[%H:%M:%S]'), 'open end')
+        '''
+        parse file on open with included files
+        '''
+        self.parse_text(ed_self, 1)
 
 
     def on_change_slow(self, ed_self):
-
-        if ed_self.get_prop(PROP_LEXER_CARET) == 'AutoIt':
-#           print(time.strftime('[%H:%M:%S]'), 'change start')
-            self.parse_text(ed_self, 0)
-#           print(time.strftime('[%H:%M:%S]'), 'change end')
+        '''
+        parse file for local changes
+        '''
+        self.parse_text(ed_self, 0)
 
 
     def on_save(self, ed_self):
+        '''
+        parse file on save with included files
+        '''
+        self.parse_text(ed_self, 1)
 
-        if ed_self.get_prop(PROP_LEXER_CARET) == 'AutoIt':
-#           print(time.strftime('[%H:%M:%S]'), 'save start')
-            self.parse_text(ed_self, 1)
-#           print(time.strftime('[%H:%M:%S]'), 'save end')
 
     def parse_text(self, ed_self, withincludes=0):
-
-        # with_includes: 0 - without or 1 - with included files
+        '''
+        get file content and call parser
+        '''
         file = ed_self.get_filename()
         text = ed_self.get_text_all()
         text = re.split('\r|\n', text)
@@ -84,9 +86,10 @@ class Command:
 
 
     def find_keywords(self, text, file, isincluded=False, withincludes=0):
-
+        '''
+        parse text and update cache
+        '''
         regvars = re.compile(r'\$(\w+)\s*(=|)', re.I)  # varname, maybe '=' -> gotodef
-#       regvars = re.compile(r'[^(?:Const)]\s+\$(\w+)\s*(=|)', re.I)  # varname, maybe '=' -> gotodef
         regcons = re.compile(r'Const\s+\$(\w+)\s*(=.*)', re.I)  # var, value - Global Const $COLOR_AQUA = 0x00FFFF
         regfuns = re.compile(r'Func\s+(\w+)\s*\((.*?)\)', re.I)  # funcname, params
         regincs = re.compile(r'#include\s*(<|")(.*?)[>|"]', re.I)  # [<|"], filename
@@ -168,7 +171,9 @@ class Command:
 
 
     def update_defs(self, x, y, file, line_nr):
-
+        '''
+        update cache, delete old, add new or changed entries
+        '''
         for dx in self.defs:
             if dx[0] == x and dx[1] == y:
                 self.defs[self.defs.index(dx)] = ''
@@ -178,7 +183,9 @@ class Command:
 
 
     def on_goto_def(self, ed_self):
-
+        '''
+        go to definition call
+        '''
         params = self.get_params()
         if not params:
             return
@@ -192,7 +199,9 @@ class Command:
 
 
     def handle_goto_def(self, text, fn, row, col):
-
+        '''
+        go to definition function
+        '''
         search = self.get_word_under_cursor(row, col)
 
         l_dlg = ''
@@ -218,7 +227,9 @@ class Command:
 
 
     def get_word_under_cursor(self, row, col):
-
+        '''
+        get current word
+        '''
         line = ed.get_text_line(row).lower().replace('\t', ' ')
         line1 = ' ' + line[:col]
         line2 = line[col:] + ' '
@@ -233,6 +244,9 @@ class Command:
 
 
     def goto_file(self, filename, num_line, num_col=0):
+        '''
+        open definition file and mark line
+        '''
         if not os.path.isfile(filename):
             return
 
@@ -243,7 +257,9 @@ class Command:
 
 
     def on_func_hint(self, ed_self):
-
+        '''
+        show hint call
+        '''
         params = self.get_params()
         if not params:
             return
@@ -256,7 +272,9 @@ class Command:
 
 
     def handle_func_hint(self, text, fn, row, col):
-
+        '''
+        show hint function
+        '''
         line = ed.get_text_line(row).lower()
         search = line[:col].strip()
         end = search.rfind('(')
@@ -273,7 +291,9 @@ class Command:
 
 
     def on_complete(self, ed_self):
-
+        '''
+        autocompletion call
+        '''
         params = self.get_params()
         if not params:
             return
@@ -302,7 +322,9 @@ class Command:
 
 
     def handle_autocomplete(self, text, fn, row, col):
-
+        '''
+        autocompletion function
+        '''
         line = ed.get_text_line(row).lower()
         search = line[:col]
         for s in ',([&\t':
@@ -327,7 +349,9 @@ class Command:
 
 
     def get_params(self):
-
+        '''
+        get current cursor position
+        '''
         fn = ed.get_filename()
         carets = ed.get_carets()
 
@@ -352,16 +376,18 @@ class Command:
 
 
     def show_config(self):
-
-        if not os.path.isfile(self.options_filename):
-            with open(self.options_filename, mode="w", encoding='utf8') as fout:
-                json.dump(self.options, fout, indent=4)
-
+        '''
+        open config file in editor
+        '''
+        with open(self.options_filename, mode="w", encoding='utf8') as fout:
+            json.dump(self.options, fout, indent=4)
         file_open(self.options_filename)
 
 
     def check_autoit_dir(self):
-
+        '''
+        check if AutoIt dir is exists
+        '''
         if self.found_autoitdir:
             return
 

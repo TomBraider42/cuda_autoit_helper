@@ -1,4 +1,8 @@
 
+2018.02.02
+- deleted lexer check, is in install.inf
+~ code cleaned up
+
 2018.01.29
 + added "Go to definition" command handling
 + added parsing of include-files
