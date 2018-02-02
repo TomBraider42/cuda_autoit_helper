@@ -1,6 +1,6 @@
 [info]
 title=AutoIt Helper
-desc=Autocompletion and function hints for AutoIt Lexer
+desc=Intelligence commands for AutoIt lexer: auto-completion, go to definition, function hints
 type=cudatext-plugin
 subdir=cuda_autoit_helper
 homepage=https://github.com/TomBraider42/cuda_autoit_helper
@@ -12,6 +12,6 @@ lexers=AutoIt
 
 [item2]
 section=commands
-caption=AutoIt Helper\Config...
+caption=AutoIt Helper\Config
 method=show_config
 menu=o
